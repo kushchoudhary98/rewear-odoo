@@ -82,7 +82,6 @@ export default function Home() {
         <section className="relative py-20 overflow-hidden">
           <div className="container mx-auto px-4 relative z-10 max-w-5xl">
             <div className="max-w-2xl">
-              <img src="/images/logo-light.svg" alt="ReWear" className="h-14 mb-6" onError={e => { e.currentTarget.style.display = "none"; }} />
               <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">
                 Sustainable Fashion Exchange
               </h1>
