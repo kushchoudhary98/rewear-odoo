@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import type { Route } from "./+types/addProduct";
+import { storage } from '~/firebase/config';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,6 +13,8 @@ export function meta({}: Route.MetaArgs) {
 export default function AddProduct() {
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -34,11 +38,39 @@ export default function AddProduct() {
     setPreviews(newPreviews);
   };
 
+  // Upload images to Firebase Storage and return their URLs
+  const uploadImages = async (files: File[]) => {
+    const urls: string[] = [];
+    for (const file of files) {
+      const imageRef = ref(storage, `product-images/${Date.now()}-${file.name}`);
+      await uploadBytes(imageRef, file);
+      const url = await getDownloadURL(imageRef);
+      urls.push(url);
+    }
+    return urls;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const imageUrls = await uploadImages(images);
+      // TODO: Submit the rest of the form data along with imageUrls to your backend/database
+      alert("Images uploaded:\n" + imageUrls.join('\n'));
+      // Optionally reset form here
+    } catch (err: any) {
+      setUploadError("Failed to upload images. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl bg-gradient-to-br from-green-50 via-white to-indigo-50 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-indigo-900">Add New Item</h1>
       
-      <form className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+      <form className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100" onSubmit={handleSubmit}>
         <div className="mb-6">
           <h2 className="text-xl font-semibold mb-4">Item Photos</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-4">
@@ -206,6 +238,7 @@ export default function AddProduct() {
           />
         </div>
         
+        {uploadError && <p className="text-red-500 mb-2">{uploadError}</p>}
         <div className="flex justify-end space-x-4">
           <button
             type="button"
@@ -216,8 +249,9 @@ export default function AddProduct() {
           <button
             type="submit"
             className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-green-500 text-white rounded-lg hover:from-indigo-700 hover:to-green-600 shadow transition"
+            disabled={uploading}
           >
-            List Item
+            {uploading ? "Uploading..." : "List Item"}
           </button>
         </div>
       </form>
