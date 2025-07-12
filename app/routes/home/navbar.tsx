@@ -18,10 +18,8 @@ export function NavBar() {
             <div className='flex gap-10 items-center'>
                 <a href="/" className='text-[40px] font-medium'>ReWear</a>
                 <div className='text-[20px] md:flex hidden gap-10'>
-                    <a href="/articles"  className='hover:underline'>articles</a>
-                    <a className='hover:underline'>submit work</a>
-                    <a className='hover:underline'>contact us</a>
-                    <a className='hover:underline'>about us</a>
+                    <a href="/" className='hover:underline'>contact us</a>
+                    <a href="/" className='hover:underline'>about us</a>
                 </div>
             </div>
             <a href={user ? `/dashboard` : "/login"} className="text-[20px] underline">{user ? "profile" : "login"}</a>

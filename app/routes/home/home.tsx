@@ -1,6 +1,10 @@
 import { Link } from "react-router";
 import type { Route } from "./+types/home";
 import { NavBar } from "./navbar";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { auth } from "~/firebase/config";
+import FeaturedProducts from "./FeaturedProduct";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -60,30 +64,29 @@ export default function Home() {
     { name: "Accessories", icon: "watch" },
   ];
 
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsub();
+  }, []);
+
   return (
     <>
     <NavBar />
       <div className="bg-gradient-to-br from-indigo-50 via-white to-green-50">
         {/* Hero Section */}
-        <section className="relative  text-white py-20 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <img
-              src="/images/hero-bg.jpg"
-              alt="People exchanging clothes"
-              className="w-full h-full object-cover opacity-20"
-              onError={(e) => {
-                e.currentTarget.src = "https://via.placeholder.com/1600x600?text=ReWear";
-              }}
-            />
-            <div className="absolute inset-0 "></div>
-          </div>
+        <section className="relative py-20 overflow-hidden">
           <div className="container mx-auto px-4 relative z-10 max-w-5xl">
             <div className="max-w-2xl">
               <img src="/images/logo-light.svg" alt="ReWear" className="h-14 mb-6" onError={e => { e.currentTarget.style.display = "none"; }} />
               <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">
                 Sustainable Fashion Exchange
               </h1>
-              <p className="text-lg mb-8 text-indigo-100">
+              <p className="text-lg mb-8 text-grey-400">
                 Give your clothes a second life and earn points to redeem other items.
                 Join our community to reduce waste and refresh your wardrobe sustainably.
               </p>
@@ -173,37 +176,7 @@ export default function Home() {
             </div>
 
             {/* Featured Products Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredProducts.map((product) => (
-                <Link
-                  key={product.id}
-                  to={`/product/${product.id}`}
-                  className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-transform"
-                >
-                  <div className="h-64 bg-gradient-to-br from-indigo-100 to-green-100">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://via.placeholder.com/300x400?text=No+Image";
-                      }}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-1">{product.title}</h3>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">{product.category}</span>
-                      <span className="text-indigo-600 font-medium">{product.points} pts</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>Size: {product.size}</span>
-                      <span>Condition: {product.condition}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <FeaturedProducts />
           </div>
         </section>
 
