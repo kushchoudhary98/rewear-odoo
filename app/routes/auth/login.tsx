@@ -11,24 +11,6 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Login() {
-<<<<<<< HEAD
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-100 via-white to-green-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-xl border border-gray-100">
-        <div className="flex flex-col items-center mb-4">
-          <img
-            src="/images/logo-light.svg"
-            alt="ReWear Logo"
-            className="h-12 mb-2"
-            onError={e => { e.currentTarget.style.display = "none"; }}
-          />
-          <h1 className="text-2xl font-bold text-center text-indigo-900">Login</h1>
-        </div>
-        <form className="space-y-4" method="post">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Username
-=======
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -63,20 +45,14 @@ export default function Login() {
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email:
->>>>>>> f9419c7ceca6656fe8c76bbcace78121ac634399
             </label>
             <input
               type="email"
               id="email"
               name="email"
               required
-<<<<<<< HEAD
-              className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              placeholder="Enter your username"
-=======
               value={email} onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
->>>>>>> f9419c7ceca6656fe8c76bbcace78121ac634399
             />
           </div>
           <div>
@@ -88,13 +64,8 @@ export default function Login() {
               id="password"
               name="password"
               required
-<<<<<<< HEAD
-              className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              placeholder="Enter your password"
-=======
               value={password} onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
->>>>>>> f9419c7ceca6656fe8c76bbcace78121ac634399
             />
           </div>
           {incorrect && <p className="text-red-500">*Incorrect credentials. Please try again.</p>}
@@ -115,5 +86,4 @@ export default function Login() {
         </div>
       </div>
     </div>
-  );
 }
