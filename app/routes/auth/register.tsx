@@ -1,12 +1,14 @@
 import { useState } from "react";
 import type { Route } from "./+types/register";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
-import { auth } from "~/firebase/config";
+import { auth, db } from "~/firebase/config";
+import { addDoc, collection, doc, serverTimestamp, setDoc, type Timestamp } from "firebase/firestore";
+import type { User } from "~/models/user";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "New React Router App" },
-        { name: "description", content: "Welcome to React Router!" },
+        { title: "Register" },
+        { name: "description", content: "Create a new account" },
     ];
 }
 
@@ -14,28 +16,40 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [emailSent, setEmailSent] = useState(false);
 
-    const handleRegister = (event: React.FormEvent) => {
+    const handleRegister = async (event: React.FormEvent) => {
         event.preventDefault();
         setLoading(true);
-        setEmailSent(false);
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-                console.log("Registration successful:", user);
-                window.location.href = "/dashboard";
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.error("Registration failed:", errorCode, errorMessage);
-            })
-            .finally(() => {
-                setLoading(false);
-                setEmailSent(true);
-            });
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Prepare Firestore user document
+            const userData: User = {
+                userId: user.uid,
+                firstName: 'Anonymous', // Default value, can be updated later
+                lastName: 'User',
+                emailId: email.toLowerCase(),
+                age: 18,
+                points: 0,
+                role: "user",
+                cart: [],
+                soldItems: [],
+                createdAt: serverTimestamp() as Timestamp,
+                updatedAt: serverTimestamp() as Timestamp,
+            };
+
+            // Write user data to Firestore
+            await setDoc(doc(db, "users", user.uid), userData);
+
+            console.log("Registration and Firestore user creation successful:", user.uid);
+        } catch (error: any) {
+            console.error("Registration failed:", error.code, error.message);
+        } finally {
+            setLoading(false);
+            window.location.href = "/dashboard";
+        }
     };
 
     return <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -68,7 +82,6 @@ export default function Register() {
                         className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
                     />
                 </div>
-                {emailSent && <p className="text-green-500">Please check you email </p>}
                 <div className="flex items-center">
                     Already have an account? &nbsp;
                     <a href="/login" className=" text-indigo-600 hover:text-indigo-500">Login</a>

@@ -24,7 +24,7 @@ export function NavBar() {
                     <a className='hover:underline'>about us</a>
                 </div>
             </div>
-            <a href="/login" className="text-[20px] underline">{user ? "profile" : "login"}</a>
+            <a href={user ? `/dashboard` : "/login"} className="text-[20px] underline">{user ? "profile" : "login"}</a>
         </div>
     );
 }
