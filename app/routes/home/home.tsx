@@ -212,7 +212,7 @@ export default function Home() {
               <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
                 <div className="flex items-center mb-4">
                   <img
-                    src="/images/user1.jpg"
+                    src="/user.webp"
                     alt="User"
                     className="w-12 h-12 rounded-full mr-4 object-cover"
                     onError={(e) => {
@@ -234,7 +234,7 @@ export default function Home() {
               <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
                 <div className="flex items-center mb-4">
                   <img
-                    src="/images/user2.jpg"
+                    src="/user.webp"
                     alt="User"
                     className="w-12 h-12 rounded-full mr-4 object-cover"
                     onError={(e) => {
@@ -256,7 +256,7 @@ export default function Home() {
               <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
                 <div className="flex items-center mb-4">
                   <img
-                    src="/images/user3.jpg"
+                    src="/user.webpgit"
                     alt="User"
                     className="w-12 h-12 rounded-full mr-4 object-cover"
                     onError={(e) => {
