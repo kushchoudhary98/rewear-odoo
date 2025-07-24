@@ -256,7 +256,7 @@ export default function Home() {
               <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
                 <div className="flex items-center mb-4">
                   <img
-                    src="/user.webpgit"
+                    src="/user.webp"
                     alt="User"
                     className="w-12 h-12 rounded-full mr-4 object-cover"
                     onError={(e) => {
